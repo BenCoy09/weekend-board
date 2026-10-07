@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Weekend Board: tokenized stocks while Wall Street is closed</title>
+<style>
+:root{--bg:#fafaf7;--fg:#1c1b19;--mut:#6b6a66;--card:#fff;--line:#e4e2db;--up:#0f7b4f;--dn:#b3261e;--ac:#8a5a00;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15140f;--fg:#efede6;--mut:#a09d94;--card:#1e1d17;--line:#33312a;--up:#4fcf94;--dn:#ff8a80;--ac:#e8b04b}}
+:root[data-theme="dark"]{--bg:#15140f;--fg:#efede6;--mut:#a09d94;--card:#1e1d17;--line:#33312a;--up:#4fcf94;--dn:#ff8a80;--ac:#e8b04b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Georgia,'Times New Roman',serif}
+main{max-width:860px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.7rem;line-height:1.2;margin:8px 0}
+h2{font-size:1.15rem;margin:32px 0 6px}
+p{margin:6px 0}.mut{color:var(--mut);font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.big{font:700 1.7rem/1.1 ui-monospace,Menlo,Consolas,monospace}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font:.86rem ui-monospace,Menlo,Consolas,monospace}
+th,td{padding:6px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mut);font-weight:600;cursor:pointer;position:sticky;top:0;background:var(--card)}
+.up{color:var(--up)}.dn{color:var(--dn)}
+.bar{display:inline-block;height:8px;background:var(--ac);border-radius:4px;vertical-align:middle;margin-left:6px}
+.warn{border-left:4px solid var(--ac);padding:8px 12px;background:var(--card);border-radius:0 8px 8px 0;margin:10px 0}
+ul{padding-left:20px;margin:6px 0}li{margin:4px 0}
+</style>
+</head>
+<body>
+<main>
+<p class="mut">BNB Hack: Tokenized Stocks Edition · research dataset, not trading advice</p>
+<h1>Weekend Board</h1>
+<p>What do tokenized US stocks say while Wall Street is closed? I recorded the Binance Web3 RWA API from Thursday Oct 1 to Tuesday Oct 6, 2026, and checked whether the weekend price pointed the right way.</p>
+
+<div class="grid">
+<div class="card"><div class="big">411</div><div class="mut">of 488 tokens frozen all weekend. Zero moved.</div></div>
+<div class="card"><div class="big">77</div><div class="mut">tokens kept a live price: 46 bStock, 31 Ondo.</div></div>
+<div class="card"><div class="big">24</div><div class="mut">stocks live on both issuers at once.</div></div>
+<div class="card"><div class="big">0.000%</div><div class="mut">token vs reference premium, all 488 tokens, every priced snapshot.</div></div>
+</div>
+
+<h2>1. The weekend is a split market</h2>
+<p>Between Saturday 17:32 and Sunday 19:46 UTC, 0 of 411 closed tokens changed price, while 75 of the 77 live ones did. The frozen group is exact, not approximate.</p>
+<div class="warn"><b>A finding about the API itself.</b> On the tokens I checked by hand (NFLX, KLAC, PPLT, ACN), the token list's <code>tokenPrice</code> equals <code>referencePrice</code> × <code>tokenToShareRatio</code>. Comparing them naively shows fake gaps of about 900%. Separately, <code>/rwa/price</code>, adjusted for the share ratio, shows exactly zero premium on all 488 tokens in every priced snapshot. The two prices behave as one number, so there is no on-chain-vs-reference gap to trade.</div>
+
+<h2>2. Two issuers, two weekend prices</h2>
+<p>Sunday 19:46 UTC. Ondo price vs bStock price for the same stock. Ondo is higher in 21 of 24 pairs, which suggests a steady difference between the feeds. SKHY runs the other way.</p>
+<div class="wrap"><table id="pairs"></table></div>
+
+<h2>3. Did the weekend price point the right way?</h2>
+<div class="grid">
+<div class="card"><div class="big">40/53</div><div class="mut">weekend price closer to the later price than Friday's was</div></div>
+<div class="card"><div class="big">1.88%</div><div class="mut">median miss vs 2.52% for "just use Friday"</div></div>
+<div class="card"><div class="big">83%</div><div class="mut">direction right, but "everything up" scored about 74%</div></div>
+<div class="card"><div class="big">~69%</div><div class="mut">direction right after removing market drift (chance ≈ 50%)</div></div>
+</div>
+<div class="warn"><b>Read this before trusting it.</b>
+<ul>
+<li>One weekend only, 53 stocks, and stocks move together, so these are not 53 independent tests.</li>
+<li>The target is the <b>Tuesday Oct 6, 17:58 UTC</b> price, about 28 hours after Monday's open, because a power cut stopped me recording Monday. It is not the opening print.</li>
+<li>The Friday baseline was taken 46 minutes after the close, not at it.</li>
+<li>ETHA jumped 204% (20.07 to 61.04) and is excluded as a probable data fault.</li>
+<li>Weekend moves correlate with the later move at about 0.46: some information, not an edge.</li>
+</ul></div>
+<div class="wrap"><table id="grade"></table></div>
+<p class="mut">Prices are the API's <code>referencePrice</code> (mean across issuers per ticker). Sort by tapping a column header.</p>
+
+<h2>How it was built</h2>
+<p class="mut">Node.js scripts sign requests to <code>/api/v1/dex/market/rwa/tokens</code> and <code>/rwa/price</code>, snapshot all 488 tokens, then compare snapshots: <code>recorder.js</code>, <code>compare.js</code>, <code>live.js</code>, <code>pairs.js</code>, <code>grade.js</code>.</p>
+</main>
+<script>
+const G=[["CBRS",167.15,181.84,176.29],["ETHA",20.07,20.61,61.04],["INTW",30.79,30.00,28.41],["CRCL",81.39,83.32,84.61],["IBIT",47.70,48.70,48.51],["AAOI",114.81,116.86,130.47],["COIN",182.78,185.59,187.89],["MVLL",37.92,38.45,42.26],["MSTR",160.20,162.40,164.87],["INTC",119.35,117.71,114.69],["MUU",36.82,36.37,36.32],["KORU",22.85,22.57,21.73],["QCOM",184.47,186.39,181.20],["QNT",46.17,46.60,45.99],["RKLB",73.90,74.55,74.71],["LITE",1084.15,1092.99,1132.73],["ORCL",142.05,143.14,146.31],["HOOD",112.80,113.60,112.82],["DRAM",61.62,61.22,60.28],["TSLA",370.32,372.74,379.89],["TSM",472.04,475.03,483.68],["TQQQ",80.88,81.39,84.63],["BABA",105.94,106.59,109.30],["MRVL",272.36,273.98,287.97],["NOK",10.57,10.52,10.87],["MU",1072.54,1066.70,1065.60],["NBIS",242.49,241.30,254.22],["AMZN",250.93,252.09,255.31],["AVGO",354.98,356.57,378.91],["NVDA",233.85,234.88,239.86],["SLV",54.50,54.71,55.46],["GOOGL",343.06,344.33,347.32],["GLD",379.06,380.42,381.86],["GLW",164.26,164.84,169.88],["PLTR",189.00,189.66,192.41],["ARM",307.17,308.20,302.81],["EWY",191.60,190.98,188.42],["WDC",415.54,416.87,410.53],["AMD",633.13,631.58,654.39],["QQQ",749.05,750.86,760.37],["AXTI",85.55,85.75,86.55],["META",727.03,728.69,742.62],["SPY",769.04,770.55,779.18],["SPCX",158.80,159.09,172.75],["SOXL",163.65,163.93,166.98],["IBM",221.99,222.32,221.76],["MSFT",516.98,517.68,531.03],["STRC",99.44,99.36,99.51],["SNDK",1717.91,1719.38,1674.13],["SNXX",16.28,16.27,15.44],["AAPL",333.49,333.64,332.61],["SKHY",194.46,194.51,186.71],["CRWV",89.42,89.43,92.92]];
+const P=[["SKHY",-0.924],["TSM",0.223],["GLW",0.220],["SPY",0.205],["AVGO",0.173],["TQQQ",0.166],["NVDA",0.157],["MSFT",0.136],["QQQ",0.106],["GOOGL",0.093],["TSLA",0.082],["ARM",-0.079],["ORCL",0.066],["DRAM",0.057],["MU",0.055],["INTC",0.055],["CRCL",0.042],["SPCX",0.041],["MSTR",0.040],["MRVL",0.038],["SNDK",0.035],["AMD",0.023],["COIN",-0.013],["META",0.010]];
+const cls=v=>v>0?'up':v<0?'dn':'';
+const sgn=v=>(v>0?'+':'')+v.toFixed(2)+'%';
+document.getElementById('pairs').innerHTML='<tr><th>Ticker</th><th>Ondo vs bStock</th></tr>'+P.map(([t,s])=>'<tr><td>'+t+'</td><td class="'+cls(s)+'">'+(s>0?'+':'')+s.toFixed(3)+'%<span class="bar" style="width:'+Math.min(120,Math.abs(s)*110)+'px"></span></td></tr>').join('');
+const rows=G.map(([t,f,w,m])=>({t,f,w,m,wk:(w/f-1)*100,ac:(m/f-1)*100,flag:t==='ETHA'}));
+let key='wk',desc=true;
+function draw(){
+  const r=[...rows].sort((a,b)=>desc?Math.abs(b[key]??0)-Math.abs(a[key]??0):(a[key]>b[key]?1:-1));
+  const cols=[['t','Ticker'],['f','Fri'],['w','Weekend'],['m','Tue'],['wk','Weekend move'],['ac','Later move']];
+  document.getElementById('grade').innerHTML='<tr>'+cols.map(([k,n])=>'<th data-k="'+k+'">'+n+'</th>').join('')+'</tr>'+
+  r.map(x=>'<tr'+(x.flag?' style="opacity:.55"':'')+'><td>'+x.t+(x.flag?' *':'')+'</td><td>'+x.f.toFixed(2)+'</td><td>'+x.w.toFixed(2)+'</td><td>'+x.m.toFixed(2)+'</td><td class="'+cls(x.wk)+'">'+sgn(x.wk)+'</td><td class="'+cls(x.ac)+'">'+sgn(x.ac)+'</td></tr>').join('');
+  document.querySelectorAll('#grade th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(k===key)desc=!desc;else{key=k;desc=true}if(k==='t'){rows.sort((a,b)=>a.t>b.t?1:-1)}draw()});
+}
+draw();
+</script>
+</body>
+</html>
