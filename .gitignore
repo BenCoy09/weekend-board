@@ -1,0 +1,4 @@
+.env
+data/
+probe-output.json
+node_modules/
